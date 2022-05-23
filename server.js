@@ -29,22 +29,26 @@ fm['GET/todos/:id'] = (arg, res, req) => {
 
 /*========== POST /todos ===========*/
 fm['POST/todos'] = (arg, res, req) => {
-    req.on("data", (chunk) => {
-      try {
-        const data = JSON.parse(chunk)
-  			validate(data, {task: 'new'})
-    		const id = +(Date.now() + '' + parseInt(Math.random()*1000))
-    		const newTodo = {id: id, done: false, ...data} //spread borde vara säkert
-        console.log(newTodo)
-        todos.push(newTodo)
-        writeTodos()
-        res.setHeader("Content-Type", "application/json")
-        res.statusCode = 201
-        res.end(JSON.stringify(todos.at(-1)))
-      } catch (error) {
-        handleError(error, res)
-      }
-    })
+  req.on("data", (chunk) => {
+    try {
+      const data = JSON.parse(chunk)
+			validate(data, {task: 'new'})
+  		const id = +(Date.now() + '' + parseInt(Math.random()*1000))
+  		const newTodo = {id: id, done: false, ...data} //spread borde vara säkert
+      console.log(newTodo)
+      todos.push(newTodo)
+      writeTodos()
+      res.setHeader("Content-Type", "application/json")
+      res.statusCode = 201
+      res.end(JSON.stringify(todos.at(-1)))
+    } catch (error) {
+      handleError(error, res)
+    }
+  })
+  req.on('end', () => {
+    new Promise(_ => {if (!res.statusMessage) throw 'empty body'})
+  		.catch(error => handleError(error, res))
+  })
 }
 
 /*========== PATCH /todos/:id ===========*/
@@ -62,6 +66,10 @@ fm['PATCH/todos/:id'] = (arg, res, req) => {
     } catch(error) {
 			handleError(error, res)
     }
+  })
+  req.on('end', () => {
+    new Promise(_ => {if (!res.statusMessage) throw 'empty body'})
+  		.catch(error => handleError(error, res))
   })
 }
 
@@ -82,6 +90,10 @@ fm['PUT/todos/:id'] = (arg, res, req) => {
 			handleError(error, res)
     }
   })
+  req.on('end', () => {
+    new Promise(_ => {if (!res.statusMessage) throw 'empty body'})
+  		.catch(error => handleError(error, res))
+  })
 }
 
 /*========== DELETE /todos ===========*/
@@ -91,7 +103,7 @@ fm['DELETE/todos/:id'] = (arg, res, req) => {
     todos = todos.filter(p =>  p.id !== id)
     writeTodos()
     res.statusCode = 200
-    // res.setHeader("Content-Type", "application/json")
+    res.setHeader("Content-Type", "application/json")
     res.end(JSON.stringify(todos));
   } catch {
     handleError(error, res)
@@ -140,6 +152,7 @@ const findTodo = (id) => {
 
 const errorResponse = {}
 errorResponse['id not found']		= {code: 404, text : 'id not found'}
+errorResponse['empty body']	 		= {code: 404, text : 'empty body'}
 errorResponse['no route']				= {code: 404, text : 'no route'}
 errorResponse['invalid id']			= {code: 400, text : 'invalid id'}
 errorResponse['write error']		= {code: 500, text : 'io error'}
@@ -147,6 +160,7 @@ errorResponse['SyntaxError'] 		= {code: 500, text : 'bad json'}
 errorResponse['invalid type'] 	= {code: 400, text : 'bad type'}
 errorResponse['invalid prop'] 	= {code: 400, text : 'bad prop'}
 errorResponse['invalid props'] 	= {code: 400, text : 'bad props'}
+errorResponse['empty text']		 	= {code: 400, text : 'no text'}
 
 const getErrorResponse = (error) => {
 	console.log(error)
@@ -175,6 +189,9 @@ const validate = (data, options = {task: 'new'}) => {
   }
 	if (!keys.every(prop => todoDescription[prop] === typeof data[prop])) {
     throw 'invalid type'
+  }
+  if (keys.includes('text') && !data['text'].length) {
+    throw 'empty text'
   }
   if (options.task === 'new') {
   	if (keys.length === 1 && keys[0] === 'text') return true
