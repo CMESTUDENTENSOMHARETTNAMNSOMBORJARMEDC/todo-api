@@ -10,7 +10,7 @@ Node.js is required
 node server.js
 ```
 
-Server runs on port 5001
+Server runs on port 5001.  
 Connect via http://localhost:5001/
 
 ### Get all todos
@@ -23,16 +23,15 @@ fetch("http://localhost:5001/todos/")
 //output
 [
   {
-  	id:1,
-  	done:...,
-  	text:'...'
+    id:1,
+    done:...,
+    text:'...'
   },
   /*...*/
   {
     id:30,
-  	done:...,
-  	text:'...'
-
+    done:...,
+    text:'...'
   }
 ]
 ```
@@ -73,9 +72,9 @@ fetch("http://localhost:5001/todos/"), {
 fetch("http://localhost:5001/todos/1"), {
   method: "PUT",
   body: JSON.stringify({
-  	id:7,
-  	done:true,
-  	text:'foo'
+    id:7,
+    done:true,
+    text:'foo'
   }),
 })
   .then((res) => res.json())
@@ -83,9 +82,9 @@ fetch("http://localhost:5001/todos/1"), {
 
 /* will return
 {
-    id:7,
-  	done:true,
-  	text:'foo'
+  id:7,
+  done:true,
+  text:'foo'
 }
 */
 ```
@@ -102,9 +101,9 @@ fetch("http://localhost:5001/todos/7"), {
 
 /* will return
 {
-    id:7,
-  	done:false,
-  	text:'foo'
+  id:7,
+  done:false,
+  text:'foo'
 }
 */
 ```
@@ -118,19 +117,19 @@ fetch("http://localhost:5001/todos/7"), {
 
 ## All available routes
 
-###GET:
+### GET:
 
-- /todos (get all products)
+- /todos (get all todos)
 - /todos/1 (get specific todo based on id)
 
-###POST:
+### POST:
 
 - /todos
 
-###PUT,PATCH
+### PUT,PATCH
 
 - /todos/1
 
-###DELETE
+### DELETE
 
 - /todos/1
