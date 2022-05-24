@@ -6,7 +6,7 @@ Awesome todo API
 
 Node.js is required
 
-```
+``` sh
 node server.js
 ```
 
@@ -15,7 +15,7 @@ Connect via http://localhost:5001/
 
 ### Get all todos
 
-```
+``` sh
 curl -X GET http://localhost/todos
 [
   {
@@ -34,13 +34,13 @@ curl -X GET http://localhost/todos
 
 ### Get a single todo
 
-```js
+``` sh
 curl -X GET http://localhost/todos/1
 ```
 
 ### Add new todo
 
-```
+``` sh
 curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://localhost:5001/todos
 
 {
@@ -52,7 +52,7 @@ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://loc
 
 ### Updating a todo
 
-```
+``` sh
 curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "text": "foo"}" http://localhost:5001/todos/31
 
 {
@@ -62,7 +62,7 @@ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "te
 }
 ```
 
-```
+``` sh
 curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:5001/todos/7
 
 {
@@ -70,10 +70,10 @@ curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:
   done:false,
   text:"foo"
 }
-```
+``` 
 ### Deleting a todo
 
-```
+``` sh
 curl -X DELETE http://localhost:5001/todos/7
 ```
 
