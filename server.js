@@ -46,9 +46,10 @@ fm["POST/todos"] = (arg, res, req) => {
     }
   });
   req.on("end", () => {
-    new Promise((_) => {
-      if (!res.statusMessage) throw "empty body";
-    }).catch((error) => handleError(error, res));
+    // new Promise((_) => {
+    //   if (!res.statusMessage) throw "empty body";
+    // }).catch((error) => handleError(error, res));
+    if (!res.statusMessage) handleError("empty body", res);
   });
 };
 
@@ -69,9 +70,7 @@ fm["PATCH/todos/:id"] = (arg, res, req) => {
     }
   });
   req.on("end", () => {
-    new Promise((_) => {
-      if (!res.statusMessage) throw "empty body";
-    }).catch((error) => handleError(error, res));
+    if (!res.statusMessage) handleError("empty body", res);
   });
 };
 
@@ -93,19 +92,17 @@ fm["PUT/todos/:id"] = (arg, res, req) => {
     }
   });
   req.on("end", () => {
-    new Promise((_) => {
-      if (!res.statusMessage) throw "empty body";
-    }).catch((error) => handleError(error, res));
+    if (!res.statusMessage) handleError("empty body", res);
   });
 };
 
 /*========== DELETE /todos ===========*/
 fm["DELETE/todos/:id"] = (arg, res, req) => {
   try {
-    const { id } = findTodo(arg);
-    todos = todos.filter((p) => p.id !== id);
+    const { id, index } = findTodo(arg);
+    todos.splice(index, 1);
     writeTodos();
-    res.statusCode = 200;
+    res.statusCode = 204;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(todos));
   } catch (error) {
@@ -123,24 +120,38 @@ const app = http.createServer((req, res) => {
   );
 
   if (req.method === "OPTIONS") {
-    res.statusCode = 200;
+    res.statusCode = 204;
     res.end();
     return;
   }
 
   const parts = req.url.split("/").filter((p) => p !== "");
-  const end =
-    parts.length === 2 ? "/:id" : parts.length > 2 ? "no end point" : "";
-  const arg = end === "/:id" ? parts.pop() : "";
-  const path = req.method + parts.reduce((s, p) => s + "/" + p, "") + end;
-  console.log(path);
+  // const end =
+  //   parts.length === 2 ? "/:id" : parts.length > 2 ? "no end point" : "";
+  // const arg = end === "/:id" ? parts.pop() : "";
+  // const path = req.method + parts.reduce((s, p) => s + "/" + p, "") + end;
+  // console.log(path);
 
-  try {
-    if (!fm.hasOwnProperty(path)) throw "no route";
-    fm[path](arg, res, req);
-  } catch (error) {
-    handleError(error, res);
+  const end = parts.pop();
+  const prePath = req.method + parts.reduce((s, p) => s + "/" + p, "");
+  const fullPath = prePath + "/" + end;
+  const pathWithArg = prePath + '/:id'
+  console.log(fullPath);
+
+  if (fullPath in fm) {
+    fm[fullPath]("", res, req);
+  } else if (pathWithArg in fm) {
+    fm[pathWithArg](end, res, req);
+  } else {
+    handleError("no route", res);
   }
+
+  // try {
+  //   if (!fm.hasOwnProperty(path)) throw "no route";
+  //   fm[path](arg, res, req);
+  // } catch (error) {
+  //   handleError(error, res);
+  // }
 });
 
 const findTodo = (id) => {
@@ -167,7 +178,7 @@ errorResponse["empty text"] = { code: 400, text: "no text" };
 
 const getErrorResponse = (error) => {
   console.log(error);
-  return errorResponse.hasOwnProperty(error)
+  return error in errorResponse
     ? errorResponse[error]
     : { code: 500, text: "unknown error" };
 };
@@ -187,7 +198,7 @@ const todoDescription = {
 const validate = (data, options = { task: "new" }) => {
   const keys = Object.keys(data);
   const descriptionKeys = Object.keys(todoDescription);
-  if (!keys.every((prop) => todoDescription.hasOwnProperty(prop))) {
+  if (!keys.every((prop) => prop in todoDescription)) {
     throw "invalid prop";
   }
   if (!keys.every((prop) => todoDescription[prop] === typeof data[prop])) {

@@ -15,104 +15,66 @@ Connect via http://localhost:5001/
 
 ### Get all todos
 
-```js
-fetch("http://localhost:5001/todos/")
-  .then((res) => res.json())
-  .then((json) => console.log(json));
-
-//output
+```
+curl -X GET http://localhost/todos
 [
   {
     id:1,
     done:...,
-    text:'...'
+    text:"..."
   },
-  /*...*/
+  ...
   {
     id:30,
     done:...,
-    text:'...'
+    text:"..."
   }
 ]
 ```
 
 ### Get a single todo
 
-
 ```js
-fetch("http://localhost:5001/todos/1")
-  .then((res) => res.json())
-  .then((json) => console.log(json));
+curl -X GET http://localhost/todos/1
 ```
 
 ### Add new todo
 
-```js
-fetch("http://localhost:5001/todos/"), {
-  method: "POST",
-  body: JSON.stringify({
-    text: "...",
-  }),
-})
-  .then((res) => res.json())
-  .then((json) => console.log(json));
+```
+curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://localhost:5001/todos
 
-/* will return
 {
 	id:31,
 	done:false,
-	text:'...'
+	text:"yee"
 }
-*/
 ```
 
 ### Updating a todo
 
-```js
-fetch("http://localhost:5001/todos/1"), {
-  method: "PUT",
-  body: JSON.stringify({
-    id:7,
-    done:true,
-    text:'foo'
-  }),
-})
-  .then((res) => res.json())
-  .then((json) => console.log(json));
+```
+curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "text": "foo"}" http://localhost:5001/todos/31
 
-/* will return
 {
   id:7,
   done:true,
-  text:'foo'
+  text:"foo"
 }
-*/
 ```
 
-```js
-fetch("http://localhost:5001/todos/7"), {
-  method: "PATCH",
-  body: JSON.stringify({
-    done: false,
-  }),
-})
-  .then((res) => res.json())
-  .then((json) => console.log(json));
+```
+curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:5001/todos/7
 
-/* will return
 {
   id:7,
   done:false,
-  text:'foo'
+  text:"foo"
 }
-*/
 ```
 ### Deleting a todo
 
-```js
-fetch("http://localhost:5001/todos/7"), {
-  method: "DELETE",
-});
+```
+curl -X DELETE http://localhost:5001/todos/7
 ```
 
 ## All available routes
@@ -120,7 +82,7 @@ fetch("http://localhost:5001/todos/7"), {
 ### GET:
 
 - /todos (get all todos)
-- /todos/1 (get specific todo based on id)
+- /todos/:id (get specific todo based on id)
 
 ### POST:
 
@@ -128,8 +90,8 @@ fetch("http://localhost:5001/todos/7"), {
 
 ### PUT,PATCH
 
-- /todos/1
+- /todos/:id
 
 ### DELETE
 
-- /todos/1
+- /todos/:id
