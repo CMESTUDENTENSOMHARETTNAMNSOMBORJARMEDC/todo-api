@@ -16,7 +16,7 @@ Connect via http://localhost:5001/
 ### Get all todos
 
 ``` sh
-curl -X GET http://localhost/todos
+$ curl -X GET http://localhost/todos
 [
   {
     id:1,
@@ -35,13 +35,13 @@ curl -X GET http://localhost/todos
 ### Get a single todo
 
 ``` sh
-curl -X GET http://localhost/todos/1
+$ curl -X GET http://localhost/todos/1
 ```
 
 ### Add new todo
 
 ``` sh
-curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://localhost:5001/todos
+$ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://localhost:5001/todos
 
 {
 	id:31,
@@ -53,7 +53,7 @@ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://loc
 ### Updating a todo
 
 ``` sh
-curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "text": "foo"}" http://localhost:5001/todos/31
+$ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "text": "foo"}" http://localhost:5001/todos/31
 
 {
   id:7,
@@ -63,7 +63,7 @@ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "te
 ```
 
 ``` sh
-curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:5001/todos/7
+$ curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:5001/todos/7
 
 {
   id:7,
@@ -74,7 +74,7 @@ curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:
 ### Deleting a todo
 
 ``` sh
-curl -X DELETE http://localhost:5001/todos/7
+$ curl -X DELETE http://localhost:5001/todos/7
 ```
 
 ## All available routes
