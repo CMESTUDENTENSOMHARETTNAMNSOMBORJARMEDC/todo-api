@@ -16,12 +16,14 @@ Connect via http://localhost:5001/
 
 ## Usage
 
-The following are examples with [Curl](https://github.com/curl/curl)
+The following are examples with [Curl](https://github.com/curl/curl).
+
+The output is prettified.
 
 ### Get all todos
 
 ``` sh
-$ curl -X GET http://localhost/todos
+$ curl -X GET http://localhost:5001/todos
 [
   {
     "id":1,
@@ -40,7 +42,7 @@ $ curl -X GET http://localhost/todos
 ### Get a single todo
 
 ``` sh
-$ curl -X GET http://localhost/todos/1
+$ curl -X GET http://localhost:5001/todos/1
 ```
 
 ### Add new todo

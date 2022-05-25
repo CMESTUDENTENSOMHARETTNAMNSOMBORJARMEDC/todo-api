@@ -46,7 +46,7 @@ fm["POST/todos"] = (arg, res, req) => {
     }
   });
   req.on("end", () => {
-    // new Promise((_) => {
+    // new Promise(() => {
     //   if (!res.statusMessage) throw "empty body";
     // }).catch((error) => handleError(error, res));
     if (!res.statusMessage) handleError("empty body", res);
@@ -112,13 +112,13 @@ fm["DELETE/todos/:id"] = (arg, res, req) => {
 
 const app = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  // res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  // res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, PATCH, DELETE, OPTIONS, POST, PUT"
   );
 
+  console.log(req.method);
   if (req.method === "OPTIONS") {
     res.statusCode = 204;
     res.end();
@@ -126,16 +126,10 @@ const app = http.createServer((req, res) => {
   }
 
   const parts = req.url.split("/").filter((p) => p !== "");
-  // const end =
-  //   parts.length === 2 ? "/:id" : parts.length > 2 ? "no end point" : "";
-  // const arg = end === "/:id" ? parts.pop() : "";
-  // const path = req.method + parts.reduce((s, p) => s + "/" + p, "") + end;
-  // console.log(path);
-
   const end = parts.pop();
   const prePath = req.method + parts.reduce((s, p) => s + "/" + p, "");
   const fullPath = prePath + "/" + end;
-  const pathWithArg = prePath + '/:id'
+  const pathWithArg = prePath + "/:id";
   console.log(fullPath);
 
   if (fullPath in fm) {
@@ -145,13 +139,6 @@ const app = http.createServer((req, res) => {
   } else {
     handleError("no route", res);
   }
-
-  // try {
-  //   if (!fm.hasOwnProperty(path)) throw "no route";
-  //   fm[path](arg, res, req);
-  // } catch (error) {
-  //   handleError(error, res);
-  // }
 });
 
 const findTodo = (id) => {
@@ -170,7 +157,7 @@ errorResponse["empty body"] = { code: 404, text: "empty body" };
 errorResponse["no route"] = { code: 404, text: "no route" };
 errorResponse["invalid id"] = { code: 400, text: "invalid id" };
 errorResponse["write error"] = { code: 500, text: "io error" };
-errorResponse["SyntaxError"] = { code: 500, text: "bad json" };
+errorResponse["SyntaxError"] = { code: 400, text: "bad json" };
 errorResponse["invalid type"] = { code: 400, text: "bad type" };
 errorResponse["invalid prop"] = { code: 400, text: "bad prop" };
 errorResponse["invalid props"] = { code: 400, text: "bad props" };
@@ -186,7 +173,7 @@ const getErrorResponse = (error) => {
 const handleError = (error, res) => {
   const { code, text } = getErrorResponse(error.name || error);
   res.statusCode = code;
-  res.end(text);
+  res.end(JSON.stringify(text));
 };
 
 const todoDescription = {
@@ -221,7 +208,7 @@ const validate = (data, options = { task: "new" }) => {
   throw "unknown";
 };
 
-const loadTodos = async (_) => {
+const loadTodos = async () => {
   try {
     const data = await fs.readFile(dataFile);
     // const data = await fs.readFile(dataFile, {flag: 'a'})
@@ -234,7 +221,7 @@ const loadTodos = async (_) => {
   }
 };
 
-const writeTodos = async (_) => {
+const writeTodos = async () => {
   try {
     const data = JSON.stringify(todos);
     await fs.writeFile(dataFile, data);
