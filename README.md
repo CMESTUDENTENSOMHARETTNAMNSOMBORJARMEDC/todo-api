@@ -43,13 +43,17 @@ $ curl -X GET http://localhost:5001/todos
 
 ``` sh
 $ curl -X GET http://localhost:5001/todos/1
+{
+  "id":1,
+  "done":...,
+  "text":"..."
+}
 ```
 
 ### Add new todo
 
 ``` sh
 $ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://localhost:5001/todos
-
 {
 	"id":31,
 	"done":false,
@@ -61,7 +65,6 @@ $ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://l
 
 ``` sh
 $ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "text": "foo"}" http://localhost:5001/todos/31
-
 {
   "id":7,
   "done":true,
@@ -70,8 +73,7 @@ $ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "
 ```
 
 ``` sh
-$ curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:5001/todos/7
-
+$ curl -X PATCH -H "Content-Type: application/json" -d "{"done": false}" http://localhost:5001/todos/7
 {
   "id":7,
   "done":false,
