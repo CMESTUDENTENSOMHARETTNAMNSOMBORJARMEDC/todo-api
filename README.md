@@ -6,12 +6,17 @@ Awesome todo API
 
 Node.js is required
 
+Run the following in your terminal:
 ``` sh
 node server.js
 ```
 
-Server runs on port 5001.  
+Server runs on port 5001.
 Connect via http://localhost:5001/
+
+## Usage
+
+The following are examples with [Curl](https://github.com/curl/curl)
 
 ### Get all todos
 
@@ -19,15 +24,15 @@ Connect via http://localhost:5001/
 $ curl -X GET http://localhost/todos
 [
   {
-    id:1,
-    done:...,
-    text:"..."
+    "id":1,
+    "done":...,
+    "text":"..."
   },
   ...
   {
-    id:30,
-    done:...,
-    text:"..."
+    "id":30,
+    "done":...,
+    "text":"..."
   }
 ]
 ```
@@ -44,9 +49,9 @@ $ curl -X GET http://localhost/todos/1
 $ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://localhost:5001/todos
 
 {
-	id:31,
-	done:false,
-	text:"yee"
+	"id":31,
+	"done":false,
+	"text":"yee"
 }
 ```
 
@@ -56,9 +61,9 @@ $ curl -X POST -H "Content-Type: application/json" -d "{"text": "yee"}" http://l
 $ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "text": "foo"}" http://localhost:5001/todos/31
 
 {
-  id:7,
-  done:true,
-  text:"foo"
+  "id":7,
+  "done":true,
+  "text":"foo"
 }
 ```
 
@@ -66,9 +71,9 @@ $ curl -X PUT -H "Content-Type: application/json" -d "{"id:": 7, "done": true, "
 $ curl -X PATCH -H "Content-Type: application/json" -d "{false}" http://localhost:5001/todos/7
 
 {
-  id:7,
-  done:false,
-  text:"foo"
+  "id":7,
+  "done":false,
+  "text":"foo"
 }
 ``` 
 ### Deleting a todo
